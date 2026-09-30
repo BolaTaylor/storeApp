@@ -1,4 +1,4 @@
-package com.codewithmosh.store.entities;
+package com.store.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,4 +33,5 @@ public class Address {
     @JoinColumn(name = "user_id")
     @ToString.Exclude
     private User user;
+
 }

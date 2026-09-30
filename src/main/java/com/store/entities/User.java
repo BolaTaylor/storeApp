@@ -1,10 +1,8 @@
-package com.codewithmosh.store.entities;
+package com.store.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -31,17 +29,22 @@ public class User {
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
-    @Builder.Default
-    private List<Address> addresses = new ArrayList<>();
+    @Singular // <-- Automatically generates empty, modifiable list and builder methods
+    private List<Address> addresses;
 
     public void addAddress(Address address) {
+        if (addresses == null) {
+            addresses = new java.util.ArrayList<>();
+        }
         addresses.add(address);
-        address.setUser(this);
+       address.setUser(this);
     }
 
     public void removeAddress(Address address) {
-        addresses.remove(address);
-        address.setUser(null);
+        if (addresses != null) {
+            addresses.remove(address);
+            address.setUser(null);
+        }
     }
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
@@ -49,13 +52,17 @@ public class User {
 
     @ManyToMany
     @JoinTable(
-        name = "wishlist",
-        joinColumns = @JoinColumn(name = "user_id"),
-        inverseJoinColumns = @JoinColumn(name = "product_id")
+            name = "wishlist",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
     )
-    private Set<Product> favoriteProducts = new HashSet<>();
+    @Singular("favoriteProduct") // <-- Handles the singular naming convention for the builder method
+    private Set<Product> favoriteProducts;
 
     public void addFavoriteProduct(Product product) {
+        if (favoriteProducts == null) {
+            favoriteProducts = new java.util.HashSet<>();
+        }
         favoriteProducts.add(product);
     }
 
