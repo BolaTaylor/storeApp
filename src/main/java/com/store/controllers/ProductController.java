@@ -26,9 +26,11 @@ public class ProductController {
                                             Byte categoryId) {
         List <Product> products = new ArrayList<>();
         if(categoryId != null) {
-            products = productRepository.findBycategoryId(categoryId);
+            products = productRepository.findByCategoryId(categoryId);
+         } else {
+            products = productRepository.findAllWithCategory();
         }
-        return productRepository.findAll().stream().map(productMapper::toDto).toList();
+        return products.stream().map(productMapper :: toDto).toList();
     }
 
     @GetMapping("/sort")
