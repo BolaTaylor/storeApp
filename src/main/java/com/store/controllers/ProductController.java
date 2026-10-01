@@ -1,6 +1,7 @@
 package com.store.controllers;
 
 import com.store.dtos.ProductDto;
+import com.store.entities.Product;
 import com.store.mappers.ProductMapper;
 import com.store.repositories.ProductRepository;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,11 +21,14 @@ public class ProductController {
     private final ProductMapper productMapper;
 
     @GetMapping("/all")
-    public List<ProductDto> getAllProductss() {
-        return productRepository.findAll()
-                .stream()
-                .map(productMapper::toDto)
-                .toList();
+    public List<ProductDto> getAllProducts(@RequestParam(name="categoryId",
+                                            required = false)
+                                            Byte categoryId) {
+        List <Product> products = new ArrayList<>();
+        if(categoryId != null) {
+            products = productRepository.findBycategoryId(categoryId);
+        }
+        return productRepository.findAll().stream().map(productMapper::toDto).toList();
     }
 
     @GetMapping("/sort")
@@ -38,12 +43,9 @@ public class ProductController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDto> getUser(@PathVariable Long id) {
+    public ResponseEntity<ProductDto> getProduct(@PathVariable Long id) {
         return productRepository.findById(id)
                 .map(product -> ResponseEntity.ok(productMapper.toDto(product)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
-
-
-
 }
