@@ -1,7 +1,6 @@
 package com.store.controllers;
 
 import com.store.dtos.UserDto;
-import com.store.entities.User;
 import com.store.mappers.UserMapper;
 import com.store.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -9,8 +8,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @AllArgsConstructor
