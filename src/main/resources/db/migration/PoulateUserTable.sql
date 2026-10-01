@@ -1,0 +1,1 @@
+insert into store_db.users set id="01", name="Bola Taylor", email="bolataylor7@gmail.com", password="P4ssw0rd";
