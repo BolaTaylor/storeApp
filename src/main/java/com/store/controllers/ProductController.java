@@ -28,10 +28,8 @@ public class ProductController {
                                               UriComponentsBuilder uriComponentsBuilder) {
 
         var category = categoryRepository.findById(Byte.valueOf(registerProductRequest.getCategoryId())).orElseThrow();
-       if(category == null){
-           return ResponseEntity.badRequest().build();
-       }
         var product = productMapper.toEntity(registerProductRequest);
+       product.setCategory(category);
         productRepository.save(product);
         var productDto = productMapper.toDto(product);
         var uri = uriComponentsBuilder.path("/products/{id}").buildAndExpand(productDto.getId()).toUri();
